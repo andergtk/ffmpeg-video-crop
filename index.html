@@ -24,8 +24,8 @@
             </label>
 
             <div class="player">
-                <video controls>
-                    <source :src="videoUrl" v-if="videoUrl" />
+                <video controls ref="video" @timeupdate="onVideoTimeUpdate">
+                    <source :src="fileUrl" v-if="fileUrl" />
                 </video>
             </div>
 
@@ -46,10 +46,12 @@
                         <i class="fas fa-trash fa-fw"></i>
                     </button>
                 </div>
-                <div class="timeline-inner">
+                <div class="timeline-slices-container">
                     <div class="timeline-slices"></div>
                     <div class="timeline-needle">
-                        <div class="timeline-needle-label">00:00:00</div>
+                        <div class="timeline-needle-label">
+                            {{ currentTimeToDisplay }}
+                        </div>
                     </div>
                 </div>
             </div>
