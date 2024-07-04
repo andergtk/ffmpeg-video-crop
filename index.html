@@ -9,22 +9,23 @@
 </head>
 
 <body>
-    <div id="page">
-        <h1 id="title">FFmpeg Video Crop</h1>
+    <div class="page-container">
+        <h1 class="page-title">FFmpeg Video Crop</h1>
 
-        <label id="media-upload-label" for="file">
-            Select media (.mp4, .avi, .webm, etc)
+        <label class="upload-container">
+            <span class="upload-label">Select media (.mp4, .avi, .webm, etc)</span>
+            <input id="file" type="file">
         </label>
-        <input id="file" type="file">
 
-        <div id="media-player">
-            <video id="media-video" controls>
-                <source id="media-source" />
+        <div class="player">
+            <video controls>
+                <source />
             </video>
         </div>
 
-        <div id="media-editor">
-            Layer editor here
+        <div class="timeline-container">
+            <div class="timeline"></div>
+            <div class="needle"></div>
         </div>
     </div>
 

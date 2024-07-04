@@ -1,7 +1,8 @@
+const uploadContainer = document.querySelector('.upload-container')
+const uploadLabel = document.querySelector('.upload-label')
+const playerVideo = document.querySelector('.player video')
+const playerSource = document.querySelector('.player source')
 const fileInput = document.querySelector('#file')
-const mediaUploadLabel = document.querySelector('#media-upload-label')
-const mediaVideo = document.querySelector('#media-video')
-const mediaSource = document.querySelector('#media-source')
 
 fileInput.addEventListener('change', onFileChange)
 
@@ -10,11 +11,12 @@ function onFileChange(event) {
   const reader = new FileReader()
 
   reader.onload = (e) => {
-    mediaSource.type = file.type
-    mediaSource.src = e.target.result
-    mediaVideo.innerHTML = mediaVideo.innerHTML
-    mediaUploadLabel.textContent = file.name
-    mediaUploadLabel.classList.add('success')
+    playerSource.type = file.type
+    playerSource.src = e.target.result
+    playerVideo.innerHTML = playerVideo.innerHTML
+
+    uploadContainer.classList.add('success')
+    uploadLabel.textContent = file.name
   }
 
   reader.readAsDataURL(file)

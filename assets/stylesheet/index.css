@@ -56,50 +56,64 @@ table {
   border-spacing: 0;
 }
 
-#page {
+.page-container {
   display: flex;
   flex-direction: column;
   gap: 48px;
+  margin: 72px auto;
   width: 100%;
   max-width: 1200px;
-  margin: 48px auto;
 }
 
-#title {
+.page-title {
   color: #fff;
   font-size: 48px;
   font-weight: bold;
   text-align: center;
 }
 
-#media-upload-label {
+.upload-container {
+  cursor: pointer;
   display: block;
-  padding: 24px 16px;
+  padding: 24px;
   width: 100%;
   border-radius: 8px;
-  border: 2px dashed #7f8c8d;
-  background-color: #95a5a6;
-  font-weight: bold;
+  border: 4px dashed #fff;
+  background-color: #7f8c8d;
 }
 
-#media-upload-label.success {
-  border-color: #16a085;
-  background-color: #1abc9c;
+.upload-container.success {
+  border-color: transparent;
+  background-color: #2ecc71;
+}
+
+.upload-label {
+  color: #fff;
+  font-weight: bold;
 }
 
 #file {
   display: none;
 }
 
-#media-player {
+.player {
   position: relative;
   width: 100%;
   padding-bottom: 50%;
+  border-radius: 8px;
   background-color: #000;
 }
 
-#media-player video {
+.player video {
   position: absolute;
   width: 100%;
   height: 100%;
+  border-radius: 8px;
+}
+
+.timeline {
+  width: 100%;
+  height: 128px;
+  border-radius: 8px;
+  background-color: #34495e;
 }
