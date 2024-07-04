@@ -1,23 +1,32 @@
-const uploadContainer = document.querySelector('.upload-container')
-const uploadLabel = document.querySelector('.upload-label')
-const playerVideo = document.querySelector('.player video')
-const playerSource = document.querySelector('.player source')
-const fileInput = document.querySelector('#file')
+const { createApp } = Vue
 
-fileInput.addEventListener('change', onFileChange)
+const app = createApp({
+  data() {
+    return {
+      video: null,
+    }
+  },
+  computed: {
+    enableDeleteClip() {
+      return false
+    },
+  },
+  methods: {
+    onFileUpload(event) {
+      const file = event.target.files[0]
+      const reader = new FileReader()
 
-function onFileChange(event) {
-  const file = event.target.files[0]
-  const reader = new FileReader()
+      reader.onload = (e) => {
+        this.video = {
+          name: file.name,
+          type: file.type,
+          url: e.target.result,
+        }
+      }
 
-  reader.onload = (e) => {
-    playerSource.type = file.type
-    playerSource.src = e.target.result
-    playerVideo.innerHTML = playerVideo.innerHTML
-
-    uploadContainer.classList.add('success')
-    uploadLabel.textContent = file.name
+      reader.readAsDataURL(file)
+    },
   }
+})
 
-  reader.readAsDataURL(file)
-}
+app.mount('#app')
