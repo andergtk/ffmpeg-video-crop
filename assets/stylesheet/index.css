@@ -92,7 +92,7 @@ table {
   font-weight: bold;
 }
 
-#file {
+.upload-input {
   display: none;
 }
 
@@ -131,7 +131,6 @@ table {
   border-radius: 8px;
   background-color: #34495e;
   color: #fff;
-  font-weight: bold;
 }
 
 .timeline-control:hover:not([disabled]) {

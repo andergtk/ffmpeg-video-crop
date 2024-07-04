@@ -3,28 +3,22 @@ const { createApp } = Vue
 const app = createApp({
   data() {
     return {
-      video: null,
+      file: null,
     }
   },
   computed: {
+    videoUrl() {
+      if (!this.file) return null
+      const url = window.URL || window.webkitURL
+      return url.createObjectURL(this.file)
+    },
     enableDeleteClip() {
       return false
     },
   },
   methods: {
     onFileUpload(event) {
-      const file = event.target.files[0]
-      const reader = new FileReader()
-
-      reader.onload = (e) => {
-        this.video = {
-          name: file.name,
-          type: file.type,
-          url: e.target.result,
-        }
-      }
-
-      reader.readAsDataURL(file)
+      this.file = event.target.files[0]
     },
   }
 })
