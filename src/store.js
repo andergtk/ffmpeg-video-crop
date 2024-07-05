@@ -2,26 +2,28 @@ import { reactive } from 'vue'
 
 export const store = reactive({
   file: null,
-  videoInfo: null,
-
-  setFile(file) {
-    this.file = file
-  },
-
-  loadVideoInfoFromElement(videoElement) {
-    if (!videoElement) {
-      this.videoInfo = null
-      return
-    }
-
-    const {
-      duration,
-      currentTime,
-    } = videoElement
-
-    this.videoInfo = {
-      duration,
-      currentTime,
-    }
-  }
+  video: null,
+  videoData: null,
 })
+
+export function loadFile(file) {
+  store.file = file
+}
+
+export function registerVideoElement(video) {
+  store.video = video
+  video.addEventListener('timeupdate', () => loadVideoData(video))
+  video.addEventListener('durationchange', () => loadVideoData(video))
+}
+
+export function loadVideoData(video) {
+  const {
+    duration,
+    currentTime,
+  } = video
+
+  store.videoData = {
+    duration,
+    currentTime,
+  }
+}

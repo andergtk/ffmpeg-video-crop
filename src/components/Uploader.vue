@@ -1,11 +1,11 @@
 <template>
-  <label class="uploader-container" :class="{ success: !!store.file }">
+  <label class="uploader-container" :class="{ success: !!file }">
     <input type="file" class="uploader-input" @change="onFileChange">
 
     <span class="uploader-label">
-      <template v-if="store.file?.name">
+      <template v-if="file?.name">
         <font-awesome-icon icon="fas fa-film" size="xl" fixed-width />
-        {{ store.file.name }}
+        {{ file.name }}
       </template>
       <template v-else>
         <font-awesome-icon icon="fas fa-cloud-arrow-up" size="xl" fixed-width />
@@ -16,10 +16,13 @@
 </template>
 
 <script setup>
-import { store } from '@/store'
+import { computed } from 'vue'
+import { store, loadFile } from '@/store'
+
+const file = computed(() => store.file)
 
 function onFileChange(event) {
-  store.setFile(event.target.files[0])
+  loadFile(event.target.files[0])
 }
 </script>
 

@@ -1,23 +1,21 @@
 <template>
   <div class="player-container">
-    <video controls @durationchange="onVideoChange" @timeupdate="onVideoChange">
+    <video ref="video" controls>
       <source :src="fileUrl" v-if="fileUrl" />
     </video>
   </div>
 </template>
 
 <script setup>
-import { computed } from 'vue'
-import { store } from '@/store'
+import { computed, ref, onMounted } from 'vue'
+import { store, registerVideoElement } from '@/store'
+import { createURLFromFile } from '@/utils'
 
-const fileUrl = computed(() => {
-  const url = window.URL || window.webkitURL
-  return store.file && url.createObjectURL(store.file)
-})
+const fileUrl = computed(() => createURLFromFile(store.file))
 
-function onVideoChange(event) {
-  store.loadVideoInfoFromElement(event.target)
-}
+const video = ref(null)
+
+onMounted(() => registerVideoElement(video.value))
 </script>
 
 <style scoped>

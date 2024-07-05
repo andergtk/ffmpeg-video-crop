@@ -39,9 +39,9 @@ import { computed } from 'vue'
 import { store } from '@/store'
 import { formatSeconds } from '@/utils'
 
-const formattedCurrentTime = computed(() => {
-  return formatSeconds(store.videoInfo?.currentTime)
-})
+const formattedCurrentTime = computed(() =>
+  formatSeconds(store.videoData?.currentTime)
+)
 </script>
 
 <style scoped>
