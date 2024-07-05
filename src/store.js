@@ -6,6 +6,7 @@ export const store = reactive({
   videoData: null,
 
   needleSeconds: 0,
+  timeRanges: [],
 })
 
 export function loadFile(file) {
@@ -15,7 +16,17 @@ export function loadFile(file) {
 export function registerVideoElement(video) {
   store.video = video
   video.addEventListener('timeupdate', () => loadVideoData(video))
-  video.addEventListener('durationchange', () => loadVideoData(video))
+  video.addEventListener('durationchange', () => {
+    loadVideoData(video)
+    resetTimeRanges()
+  })
+}
+
+export function resetTimeRanges() {
+  store.timeRanges = [{
+    start: 0,
+    end: store.videoData.duration,
+  }]
 }
 
 export function loadVideoData(video) {

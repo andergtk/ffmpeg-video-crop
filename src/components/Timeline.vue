@@ -24,7 +24,7 @@
     <div class="timeline-slices-container">
       <div class="timeline-inner" ref="timeline">
         <div class="timeline-slices">
-          <div class="timeline-slice"></div>
+          <div class="timeline-slice" v-for="(timeRange, index) in timeRanges" :key="index"></div>
         </div>
         <div class="timeline-needle" ref="needle" :style="`left: ${needlePosition}px;`">
           <div class="timeline-needle-label">
@@ -46,6 +46,7 @@ const timeline = ref(null)
 const isDragging = ref(false)
 
 const file = computed(() => store.file)
+const timeRanges = computed(() => store.timeRanges)
 
 const formattedNeedleSeconds = computed(() =>
   formatSeconds(store.needleSeconds)
