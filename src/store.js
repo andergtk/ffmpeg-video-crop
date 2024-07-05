@@ -4,6 +4,7 @@ export const store = reactive({
   file: null,
   video: null,
   videoData: null,
+  needlePosition: 0,
 })
 
 export function loadFile(file) {

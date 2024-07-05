@@ -22,14 +22,15 @@
     </div>
 
     <div class="timeline-slices-container">
-      <div class="timeline-slices">
-        <div class="timeline-slice"></div>
-        <div class="timeline-slice"></div>
-      </div>
-
-      <div class="timeline-needle">
-        <div class="timeline-needle-label">
-          {{ formattedCurrentTime }}
+      <div class="timeline-inner" ref="timeline">
+        <div class="timeline-slices">
+          <div class="timeline-slice"></div>
+          <div class="timeline-slice"></div>
+        </div>
+        <div class="timeline-needle" ref="needle">
+          <div class="timeline-needle-label">
+            {{ formattedCurrentTime }}
+          </div>
         </div>
       </div>
     </div>
@@ -37,13 +38,39 @@
 </template>
 
 <script setup>
-import { computed } from 'vue'
+import { computed, ref, onMounted } from 'vue'
 import { store } from '@/store'
 import { formatSeconds } from '@/utils'
 
 const formattedCurrentTime = computed(() =>
   formatSeconds(store.videoData?.currentTime)
 )
+
+const needle = ref(null)
+const timeline = ref(null)
+const isDragging = ref(false)
+
+onMounted(() => {
+  needle.value.addEventListener('mousedown', () => {
+    isDragging.value = true
+  })
+
+  document.addEventListener('mouseup', () => {
+    isDragging.value = false
+  })
+
+  document.addEventListener('mousemove', (e) => {
+    if (!isDragging.value) return
+
+    const timelineRect = timeline.value.getBoundingClientRect()
+    let newLeft = e.clientX - timelineRect.left
+
+    if (newLeft < 0) newLeft = 0
+    if (newLeft > timelineRect.width) newLeft = timelineRect.width
+
+    needle.value.style.left = `${newLeft}px`
+  })
+})
 </script>
 
 <style scoped>
@@ -51,6 +78,12 @@ const formattedCurrentTime = computed(() =>
   display: flex;
   flex-direction: column;
   gap: 16px;
+}
+
+.timeline-inner {
+  position: relative;
+  width: 100%;
+  height: 100%;
 }
 
 /* Controls */
@@ -122,7 +155,9 @@ const formattedCurrentTime = computed(() =>
 .timeline-needle {
   cursor: pointer;
   position: absolute;
-  top: 16px;
+  top: 0;
+  left: 0;
+  transform: translateX(-2px);
   height: 112px;
   width: 4px;
   border-radius: 2px 2px 0 0;
