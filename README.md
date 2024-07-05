@@ -5,8 +5,20 @@ Online tool for cropping videos using
 
 [Live Demo](https://andersoncamargo.com.br/ffmpeg-video-crop/)
 
-## Development
+## Project Setup
 
-```bash
-npx live-server
+```sh
+npm install
+```
+
+### Compile and Hot-Reload for Development
+
+```sh
+npm run dev
+```
+
+### Compile and Minify for Production
+
+```sh
+npm run build
 ```

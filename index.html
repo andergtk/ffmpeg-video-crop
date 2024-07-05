@@ -4,62 +4,13 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="icon" href="/favicon.ico">
     <title>FFmpeg Video Crop</title>
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.2/css/all.min.css"
-        integrity="sha512-SnH5WK+bZxgPHs44uWIX+LLJAJ9/2PkPKZ5QiAj6Ta86w+fsb2TkcmfRyVX3pBnMFcV7oQPJkl9QevSCWr3W6A=="
-        crossorigin="anonymous" referrerpolicy="no-referrer" />
-    <link rel="stylesheet" href="assets/stylesheet/index.css" />
 </head>
 
 <body>
-    <div id="app">
-        <div class="page-container">
-            <h1 class="page-title">FFmpeg Video Crop</h1>
-
-            <label class="upload-container" :class="{ success: !!file }">
-                <span class="upload-label">
-                    {{ file?.name || 'Select media (.mp4, .avi, .webm, etc)' }}
-                </span>
-                <input type="file" class="upload-input" @change="onFileUpload">
-            </label>
-
-            <div class="player">
-                <video controls ref="video" @timeupdate="onVideoTimeUpdate">
-                    <source :src="fileUrl" v-if="fileUrl" />
-                </video>
-            </div>
-
-            <div class="timeline-container">
-                <div class="timeline-controls-container">
-                    <button class="timeline-control timeline-undo">
-                        <i class="fas fa-undo fa-fw"></i>
-                    </button>
-                    <button class="timeline-control timeline-redo">
-                        <i class="fas fa-redo fa-fw"></i>
-                    </button>
-                    <button class="timeline-control timeline-crop">
-                        <i class="fas fa-scissors fa-fw"></i>
-                        Crop
-                    </button>
-                    <div class="timeline-control-divider"></div>
-                    <button class="timeline-control timeline-delete" :disabled="!enableDeleteClip">
-                        <i class="fas fa-trash fa-fw"></i>
-                    </button>
-                </div>
-                <div class="timeline-slices-container">
-                    <div class="timeline-slices"></div>
-                    <div class="timeline-needle">
-                        <div class="timeline-needle-label">
-                            {{ currentTimeToDisplay }}
-                        </div>
-                    </div>
-                </div>
-            </div>
-        </div>
-    </div>
-
-    <script src="https://unpkg.com/vue@3/dist/vue.global.js"></script>
-    <script src="assets/javascript/script.js"></script>
+    <div id="app"></div>
+    <script type="module" src="/src/main.js"></script>
 </body>
 
 </html>
