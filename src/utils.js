@@ -12,11 +12,15 @@ export function formatSeconds(seconds) {
 export function transformSecondsToPosition(seconds, duration, container) {
   if (!duration || !container) return 0
   const { width } = container.getBoundingClientRect()
-  return (seconds * width / duration).toFixed(3)
+  return normalizeSeconds(seconds * width / duration)
 }
 
 export function transformPositionToSeconds(position, duration, container) {
   if (!duration || !container) return 0
   const { width } = container.getBoundingClientRect()
-  return (position * duration / width).toFixed(3)
+  return normalizeSeconds(position * duration / width)
+}
+
+export function normalizeSeconds(number) {
+  return Number(number.toFixed(3))
 }

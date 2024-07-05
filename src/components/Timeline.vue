@@ -9,7 +9,7 @@
         <font-awesome-icon icon="fas fa-redo" />
       </button>
 
-      <button class="timeline-control timeline-crop" :disabled="true">
+      <button class="timeline-control timeline-crop" :disabled="!canCrop" @click="onCropClick">
         <font-awesome-icon icon="fas fa-scissors" />
         Crop
       </button>
@@ -24,12 +24,7 @@
     <div class="timeline-slices-container">
       <div class="timeline-inner" ref="timeline">
         <div class="timeline-slices">
-          <div
-            class="timeline-slice"
-            v-for="(timeRange, index) in timeRanges"
-            :key="index"
-            :style="`left: ${timeRange.left}px; width: ${timeRange.width}px;`"
-          ></div>
+          <div class="timeline-slice" v-for="timeRange in positionatedTimeRanges" :style="`left: ${timeRange.left}px; width: ${timeRange.width}px;`"></div>
         </div>
         <div class="timeline-needle" ref="needle" :style="`left: ${needlePosition}px;`">
           <div class="timeline-needle-label">
@@ -43,7 +38,7 @@
 
 <script setup>
 import { computed, ref, onMounted } from 'vue'
-import { store, setNeedleSeconds } from '@/store'
+import { store, setNeedleSeconds, setTimeRanges } from '@/store'
 import {
   formatSeconds,
   transformSecondsToPosition,
@@ -57,10 +52,14 @@ const isDragging = ref(false)
 const file = computed(() => store.file)
 const duration = computed(() => store.videoData?.duration || 0)
 const currentTime = computed(() => store.videoData?.currentTime || 0)
-const formattedNeedleSeconds = computed(() => formatSeconds(store.needleSeconds))
-const needlePosition = computed(() => convertSecondsToPosition(store.needleSeconds))
+const needleSeconds = computed(() => store.needleSeconds || 0)
+const timeRanges = computed(() => store.timeRanges)
+const formattedNeedleSeconds = computed(() => formatSeconds(needleSeconds.value))
+const needlePosition = computed(() => convertSecondsToPosition(needleSeconds.value))
 
-const timeRanges = computed(() =>
+const canCrop = computed(() => currentTime.value > 0 && currentTime.value < duration.value)
+
+const positionatedTimeRanges = computed(() =>
   store.timeRanges.map(({ start, end }) => {
     const left = convertSecondsToPosition(start)
     const width = convertSecondsToPosition(end) - left
@@ -68,13 +67,24 @@ const timeRanges = computed(() =>
   })
 )
 
-const canCrop = computed(() => {
-  if (currentTime.value === 0 || currentTime.value === duration.value) {
-    return false
-  }
+function onCropClick() {
+  const index = timeRangeIndexAtSecond(needleSeconds.value)
+  if (index === -1) return
 
-  return true
-})
+  const timeRangesClone = [...timeRanges.value]
+  const { start, end } = timeRangesClone[index]
+  const leftTimeRange = { start, end: needleSeconds.value - 0.001 }
+  const rightTimeRange = { start: needleSeconds.value, end }
+  timeRangesClone.splice(index, 1, leftTimeRange, rightTimeRange)
+
+  setTimeRanges(timeRangesClone)
+}
+
+function timeRangeIndexAtSecond(second) {
+  return timeRanges.value.findIndex(({ start, end }) =>
+    start < second && end > second
+  )
+}
 
 function convertSecondsToPosition(seconds) {
   return transformSecondsToPosition(
@@ -182,6 +192,7 @@ onMounted(() => {
 
 .timeline-slices {
   display: flex;
+  justify-content: space-between;
   width: 100%;
   height: 100%;
   border-radius: 8px;
@@ -189,6 +200,7 @@ onMounted(() => {
 }
 
 .timeline-slice {
+  position: absolute;
   width: 100%;
   height: 100%;
   border-radius: 8px;

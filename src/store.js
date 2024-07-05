@@ -1,4 +1,5 @@
 import { reactive } from 'vue'
+import { normalizeSeconds } from '@/utils'
 
 export const store = reactive({
   file: null,
@@ -29,11 +30,16 @@ export function resetTimeRanges() {
   }]
 }
 
+export function setTimeRanges(timeRanges = []) {
+  store.timeRanges = timeRanges.map(({ start, end }) => ({
+    start: normalizeSeconds(start),
+    end: normalizeSeconds(end),
+  }))
+}
+
 export function loadVideoData(video) {
-  const {
-    duration,
-    currentTime,
-  } = video
+  const duration = normalizeSeconds(video.duration)
+  const currentTime = normalizeSeconds(video.currentTime)
 
   store.videoData = {
     duration,
@@ -46,9 +52,9 @@ export function loadVideoData(video) {
 }
 
 export function setNeedleSeconds(seconds) {
-  store.needleSeconds = seconds
+  store.needleSeconds = normalizeSeconds(seconds)
 
-  if (store.video.currentTime !== seconds) {
-    store.video.currentTime = seconds
+  if (store.video.currentTime !== store.needleSeconds) {
+    store.video.currentTime = store.needleSeconds
   }
 }
