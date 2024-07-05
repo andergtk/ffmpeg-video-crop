@@ -18,18 +18,18 @@
     <div class="timeline-container">
       <div class="timeline-controls-container">
         <button class="timeline-control timeline-undo">
-          <i class="fas fa-undo fa-fw"></i>
+          <font-awesome-icon icon="fas fa-undo" />
         </button>
         <button class="timeline-control timeline-redo">
-          <i class="fas fa-redo fa-fw"></i>
+          <font-awesome-icon icon="fas fa-redo" />
         </button>
         <button class="timeline-control timeline-crop">
-          <i class="fas fa-scissors fa-fw"></i>
+          <font-awesome-icon icon="fas fa-scissors" />
           Crop
         </button>
         <div class="timeline-control-divider"></div>
         <button class="timeline-control timeline-delete" :disabled="!enableDeleteClip">
-          <i class="fas fa-trash fa-fw"></i>
+          <font-awesome-icon icon="fas fa-trash" />
         </button>
       </div>
       <div class="timeline-slices-container">
