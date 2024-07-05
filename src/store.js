@@ -71,6 +71,23 @@ export function cropAtSecond(seconds) {
   setTimeRanges(timeRangesClone)
 }
 
+export function toggleDeleteAtNeedle() {
+  toggleDeleteAtSecond(store.needleSeconds)
+}
+
+export function toggleDeleteAtSecond(seconds) {
+  const index = timeRangeIndexAtSecond(seconds)
+  if (index === -1) return
+  const timeRangesClone = [...store.timeRanges]
+  const currentTimeRange = timeRangesClone[index]
+  currentTimeRange.deleted = !currentTimeRange.deleted
+  setTimeRanges(timeRangesClone)
+}
+
+export function timeRangeIndexAtNeedle() {
+  return timeRangeIndexAtSecond(store.needleSeconds)
+}
+
 export function timeRangeIndexAtSecond(seconds) {
   return store.timeRanges.findIndex(({ start, end }) =>
     start < seconds && end > seconds

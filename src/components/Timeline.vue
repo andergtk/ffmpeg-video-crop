@@ -16,7 +16,7 @@
 
       <div class="timeline-control-divider"></div>
 
-      <button class="timeline-control timeline-delete" :disabled="true">
+      <button class="timeline-control timeline-delete" @click="onToggleDeleteClick">
         <font-awesome-icon icon="fas fa-trash" />
       </button>
     </div>
@@ -24,7 +24,7 @@
     <div class="timeline-slices-container">
       <div class="timeline-inner" ref="timeline">
         <div class="timeline-slices">
-          <div class="timeline-slice" v-for="timeRange in positionatedTimeRanges" :style="`left: ${timeRange.left}px; width: ${timeRange.width}px;`"></div>
+          <div class="timeline-slice" :class="{ deleted: timeRange.deleted }" v-for="timeRange in positionatedTimeRanges" :style="`left: ${timeRange.left}px; width: ${timeRange.width}px;`"></div>
         </div>
         <div class="timeline-needle" ref="needle" :style="`left: ${needlePosition}px;`">
           <div class="timeline-needle-label">
@@ -37,12 +37,17 @@
 </template>
 
 <script setup>
-import { computed, ref, onMounted } from 'vue'
-import { store, setNeedleSeconds, cropAtNeedle } from '@/store'
+import { computed, onMounted, ref } from 'vue'
+import {
+  cropAtNeedle,
+  setNeedleSeconds,
+  store,
+  toggleDeleteAtNeedle,
+} from '@/store'
 import {
   formatSeconds,
-  transformSecondsToPosition,
   transformPositionToSeconds,
+  transformSecondsToPosition,
 } from '@/utils'
 
 const needle = ref(null)
@@ -68,6 +73,10 @@ const positionatedTimeRanges = computed(() =>
 
 function onCropClick() {
   cropAtNeedle()
+}
+
+function onToggleDeleteClick() {
+  toggleDeleteAtNeedle()
 }
 
 function convertSecondsToPosition(seconds) {
@@ -181,6 +190,10 @@ onMounted(() => {
   height: 100%;
   border-radius: 16px;
   background-color: #ff000044;
+}
+
+.timeline-slice.deleted {
+  opacity: 50%;
 }
 
 /* Needle */
