@@ -1,6 +1,6 @@
 <template>
-  <div class="player">
-    <video controls ref="video" @timeupdate="$emit('timeupdate', $event)">
+  <div class="player-container">
+    <video controls @durationchange="onVideoChange" @timeupdate="onVideoChange">
       <source :src="fileUrl" v-if="fileUrl" />
     </video>
   </div>
@@ -8,19 +8,20 @@
 
 <script setup>
 import { computed } from 'vue'
-
-const props = defineProps({
-  file: File
-})
+import { store } from '@/store'
 
 const fileUrl = computed(() => {
   const url = window.URL || window.webkitURL
-  return props.file && url.createObjectURL(props.file)
+  return store.file && url.createObjectURL(store.file)
 })
+
+function onVideoChange(event) {
+  store.loadVideoInfoFromElement(event.target)
+}
 </script>
 
 <style scoped>
-.player {
+.player-container {
   position: relative;
   width: 100%;
   padding-bottom: 50%;
@@ -28,7 +29,7 @@ const fileUrl = computed(() => {
   background-color: #000;
 }
 
-.player video {
+.player-container video {
   position: absolute;
   width: 100%;
   height: 100%;

@@ -1,26 +1,33 @@
 <template>
   <div class="timeline-container">
     <div class="timeline-controls-container">
-      <button class="timeline-control timeline-undo">
+      <button class="timeline-control timeline-undo" :disabled="true">
         <font-awesome-icon icon="fas fa-undo" />
       </button>
-      <button class="timeline-control timeline-redo">
+
+      <button class="timeline-control timeline-redo" :disabled="true">
         <font-awesome-icon icon="fas fa-redo" />
       </button>
-      <button class="timeline-control timeline-crop">
+
+      <button class="timeline-control timeline-crop" :disabled="true">
         <font-awesome-icon icon="fas fa-scissors" />
         Crop
       </button>
+
       <div class="timeline-control-divider"></div>
+
       <button class="timeline-control timeline-delete" :disabled="true">
         <font-awesome-icon icon="fas fa-trash" />
       </button>
     </div>
+
     <div class="timeline-slices-container">
-      <div class="timeline-slices"></div>
+      <div class="timeline-slices">
+      </div>
+
       <div class="timeline-needle">
         <div class="timeline-needle-label">
-          {{ currentTimeDisplay }}
+          {{ formattedCurrentTime }}
         </div>
       </div>
     </div>
@@ -29,19 +36,12 @@
 
 <script setup>
 import { computed } from 'vue'
+import { store } from '@/store'
+import { formatSeconds } from '@/utils'
 
-const props = defineProps({
-  videoInfo: Object,
+const formattedCurrentTime = computed(() => {
+  return formatSeconds(store.videoInfo?.currentTime)
 })
-
-const currentTimeDisplay = computed(() => {
-  return secondsToDisplay(props.videoInfo?.currentTime)
-})
-
-function secondsToDisplay(value) {
-  const seconds = value || 0
-  return new Date(seconds * 1000).toISOString().slice(14, 23)
-}
 </script>
 
 <style scoped>
@@ -50,6 +50,8 @@ function secondsToDisplay(value) {
   flex-direction: column;
   gap: 16px;
 }
+
+/* Controls */
 
 .timeline-controls-container {
   display: flex;
@@ -87,6 +89,8 @@ function secondsToDisplay(value) {
   background-color: #ffffff11;
 }
 
+/* Slices  */
+
 .timeline-slices-container {
   position: relative;
   padding: 24px;
@@ -94,6 +98,12 @@ function secondsToDisplay(value) {
   height: 128px;
   border-radius: 8px;
   background-color: #34495e;
+}
+
+.timeline-slices {
+  width: 100%;
+  height: 100%;
+  background-color: #ffffff11;
 }
 
 /* Needle */
@@ -119,13 +129,5 @@ function secondsToDisplay(value) {
   color: #000000aa;
   font-size: 14px;
   font-weight: bold;
-}
-
-/* Slices */
-
-.timeline-slices {
-  width: 100%;
-  height: 100%;
-  background-color: #ffffff11;
 }
 </style>

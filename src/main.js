@@ -1,4 +1,4 @@
-import './assets/main.css'
+import '@/assets/main.css'
 
 import { library } from '@fortawesome/fontawesome-svg-core'
 import {
@@ -6,16 +6,20 @@ import {
   faScissors,
   faTrash,
   faUndo,
+  faFilm,
+  faCloudArrowUp,
 } from '@fortawesome/free-solid-svg-icons'
 import { FontAwesomeIcon } from '@fortawesome/vue-fontawesome'
 import { createApp } from 'vue'
-import App from './App.vue'
+import App from '@/App.vue'
 
 library.add(
   faRedo,
   faScissors,
   faTrash,
   faUndo,
+  faFilm,
+  faCloudArrowUp,
 )
 
 const app = createApp(App)

@@ -1,37 +1,16 @@
 <template>
   <div class="page-container">
     <h1 class="page-title">FFmpeg Video Crop</h1>
-
-    <uploader :file="file" @upload="onFileUpload" />
-    <player :file="file" @timeupdate="onVideoTimeupdate" />
-    <timeline :videoInfo="videoInfo" />
+    <uploader />
+    <player />
+    <timeline />
   </div>
 </template>
 
 <script setup>
-import Player from '@/components/Player.vue';
-import Timeline from '@/components/Timeline.vue';
-import Uploader from '@/components/Uploader.vue';
-import { ref } from 'vue';
-
-const file = ref()
-const videoInfo = ref()
-
-function onFileUpload(event) {
-  file.value = event.target.files[0]
-}
-
-function onVideoTimeupdate(event) {
-  const {
-    duration,
-    currentTime,
-  } = event.target
-
-  videoInfo.value = {
-    duration,
-    currentTime,
-  }
-}
+import Player from '@/components/Player.vue'
+import Uploader from '@/components/Uploader.vue'
+import Timeline from '@/components/Timeline.vue'
 </script>
 
 <style scoped>
