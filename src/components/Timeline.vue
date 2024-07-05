@@ -97,7 +97,7 @@ function convertPositionToSeconds(position) {
 }
 
 onMounted(() => {
-  needle.value.addEventListener('mousedown', () => {
+  timeline.value.addEventListener('mousedown', () => {
     isDragging.value = true
   })
 
