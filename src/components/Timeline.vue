@@ -38,7 +38,7 @@
 
 <script setup>
 import { computed, ref, onMounted } from 'vue'
-import { store, setNeedleSeconds, setTimeRanges } from '@/store'
+import { store, setNeedleSeconds, cropAtNeedle } from '@/store'
 import {
   formatSeconds,
   transformSecondsToPosition,
@@ -53,53 +53,29 @@ const file = computed(() => store.file)
 const duration = computed(() => store.videoData?.duration || 0)
 const currentTime = computed(() => store.videoData?.currentTime || 0)
 const needleSeconds = computed(() => store.needleSeconds || 0)
-const timeRanges = computed(() => store.timeRanges)
 const formattedNeedleSeconds = computed(() => formatSeconds(needleSeconds.value))
 const needlePosition = computed(() => convertSecondsToPosition(needleSeconds.value))
 
 const canCrop = computed(() => currentTime.value > 0 && currentTime.value < duration.value)
 
 const positionatedTimeRanges = computed(() =>
-  store.timeRanges.map(({ start, end }) => {
+  store.timeRanges.map(({ start, end, ...rest }) => {
     const left = convertSecondsToPosition(start)
     const width = convertSecondsToPosition(end) - left
-    return { start, end, left, width }
+    return { ...rest, start, end, left, width }
   })
 )
 
 function onCropClick() {
-  const index = timeRangeIndexAtSecond(needleSeconds.value)
-  if (index === -1) return
-
-  const timeRangesClone = [...timeRanges.value]
-  const { start, end } = timeRangesClone[index]
-  const leftTimeRange = { start, end: needleSeconds.value - 0.001 }
-  const rightTimeRange = { start: needleSeconds.value, end }
-  timeRangesClone.splice(index, 1, leftTimeRange, rightTimeRange)
-
-  setTimeRanges(timeRangesClone)
-}
-
-function timeRangeIndexAtSecond(second) {
-  return timeRanges.value.findIndex(({ start, end }) =>
-    start < second && end > second
-  )
+  cropAtNeedle()
 }
 
 function convertSecondsToPosition(seconds) {
-  return transformSecondsToPosition(
-    seconds,
-    duration.value,
-    timeline.value,
-  )
+  return transformSecondsToPosition(seconds, duration.value, timeline.value)
 }
 
 function convertPositionToSeconds(position) {
-  return transformPositionToSeconds(
-    position,
-    duration.value,
-    timeline.value,
-  )
+  return transformPositionToSeconds(position, duration.value, timeline.value)
 }
 
 onMounted(() => {
@@ -195,7 +171,7 @@ onMounted(() => {
   justify-content: space-between;
   width: 100%;
   height: 100%;
-  border-radius: 8px;
+  border-radius: 16px;
   background-color: #ffffff11;
 }
 
@@ -203,8 +179,8 @@ onMounted(() => {
   position: absolute;
   width: 100%;
   height: 100%;
-  border-radius: 8px;
-  background-color: #ff000033;
+  border-radius: 16px;
+  background-color: #ff000044;
 }
 
 /* Needle */
