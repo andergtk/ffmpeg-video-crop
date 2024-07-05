@@ -28,8 +28,16 @@ export function loadVideoData(video) {
     duration,
     currentTime,
   }
+
+  if (store.needleSeconds !== currentTime) {
+    store.needleSeconds = currentTime
+  }
 }
 
 export function setNeedleSeconds(seconds) {
   store.needleSeconds = seconds
+
+  if (store.video.currentTime !== seconds) {
+    store.video.currentTime = seconds
+  }
 }

@@ -25,9 +25,8 @@
       <div class="timeline-inner" ref="timeline">
         <div class="timeline-slices">
           <div class="timeline-slice"></div>
-          <div class="timeline-slice"></div>
         </div>
-        <div class="timeline-needle" ref="needle">
+        <div class="timeline-needle" ref="needle" :style="`left: ${needlePosition}px;`">
           <div class="timeline-needle-label">
             {{ formattedNeedleSeconds }}
           </div>
@@ -42,15 +41,21 @@ import { computed, ref, onMounted } from 'vue'
 import { store, setNeedleSeconds } from '@/store'
 import { formatSeconds } from '@/utils'
 
+const needle = ref(null)
+const timeline = ref(null)
+const isDragging = ref(false)
+
 const file = computed(() => store.file)
 
 const formattedNeedleSeconds = computed(() =>
   formatSeconds(store.needleSeconds)
 )
 
-const needle = ref(null)
-const timeline = ref(null)
-const isDragging = ref(false)
+const needlePosition = computed(() => {
+  if (!timeline.value || !store.videoData?.duration) return 0
+  const timelineRect = timeline.value.getBoundingClientRect()
+  return (store.needleSeconds * timelineRect.width / store.videoData.duration).toFixed(3)
+})
 
 onMounted(() => {
   needle.value.addEventListener('mousedown', () => {
@@ -66,16 +71,11 @@ onMounted(() => {
 
     const timelineRect = timeline.value.getBoundingClientRect()
     let newLeft = e.clientX - timelineRect.left
-
     if (newLeft < 0) newLeft = 0
     if (newLeft > timelineRect.width) newLeft = timelineRect.width
 
     const seconds = (newLeft * store.videoData.duration / timelineRect.width).toFixed(3)
-
-    if (store.needleSeconds !== seconds) {
-      needle.value.style.left = `${newLeft}px`
-      setNeedleSeconds(seconds)
-    }
+    setNeedleSeconds(seconds)
   })
 })
 </script>
