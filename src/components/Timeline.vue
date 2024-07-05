@@ -1,5 +1,5 @@
 <template>
-  <div class="timeline-container">
+  <div class="timeline-container" :class="{ deactive: !file }">
     <div class="timeline-controls-container">
       <button class="timeline-control timeline-undo" :disabled="true">
         <font-awesome-icon icon="fas fa-undo" />
@@ -29,7 +29,7 @@
         </div>
         <div class="timeline-needle" ref="needle">
           <div class="timeline-needle-label">
-            {{ formattedCurrentTime }}
+            {{ formattedNeedleSeconds }}
           </div>
         </div>
       </div>
@@ -39,11 +39,13 @@
 
 <script setup>
 import { computed, ref, onMounted } from 'vue'
-import { store } from '@/store'
+import { store, setNeedleSeconds } from '@/store'
 import { formatSeconds } from '@/utils'
 
-const formattedCurrentTime = computed(() =>
-  formatSeconds(store.videoData?.currentTime)
+const file = computed(() => store.file)
+
+const formattedNeedleSeconds = computed(() =>
+  formatSeconds(store.needleSeconds)
 )
 
 const needle = ref(null)
@@ -68,7 +70,12 @@ onMounted(() => {
     if (newLeft < 0) newLeft = 0
     if (newLeft > timelineRect.width) newLeft = timelineRect.width
 
-    needle.value.style.left = `${newLeft}px`
+    const seconds = (newLeft * store.videoData.duration / timelineRect.width).toFixed(3)
+
+    if (store.needleSeconds !== seconds) {
+      needle.value.style.left = `${newLeft}px`
+      setNeedleSeconds(seconds)
+    }
   })
 })
 </script>
@@ -78,6 +85,10 @@ onMounted(() => {
   display: flex;
   flex-direction: column;
   gap: 16px;
+}
+
+.timeline-container.deactive {
+  pointer-events: none;
 }
 
 .timeline-inner {

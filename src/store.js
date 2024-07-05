@@ -4,7 +4,8 @@ export const store = reactive({
   file: null,
   video: null,
   videoData: null,
-  needlePosition: 0,
+
+  needleSeconds: 0,
 })
 
 export function loadFile(file) {
@@ -27,4 +28,8 @@ export function loadVideoData(video) {
     duration,
     currentTime,
   }
+}
+
+export function setNeedleSeconds(seconds) {
+  store.needleSeconds = seconds
 }
