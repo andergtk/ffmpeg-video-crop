@@ -23,6 +23,8 @@
 
     <div class="timeline-slices-container">
       <div class="timeline-slices">
+        <div class="timeline-slice"></div>
+        <div class="timeline-slice"></div>
       </div>
 
       <div class="timeline-needle">
@@ -101,9 +103,18 @@ const formattedCurrentTime = computed(() =>
 }
 
 .timeline-slices {
+  display: flex;
   width: 100%;
   height: 100%;
+  border-radius: 8px;
   background-color: #ffffff11;
+}
+
+.timeline-slice {
+  width: 100%;
+  height: 100%;
+  border-radius: 8px;
+  background-color: #ff000033;
 }
 
 /* Needle */
