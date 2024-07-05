@@ -24,7 +24,12 @@
     <div class="timeline-slices-container">
       <div class="timeline-inner" ref="timeline">
         <div class="timeline-slices">
-          <div class="timeline-slice" v-for="(timeRange, index) in timeRanges" :key="index"></div>
+          <div
+            class="timeline-slice"
+            v-for="(timeRange, index) in timeRanges"
+            :key="index"
+            :style="`left: ${timeRange.left}px; width: ${timeRange.width}px;`"
+          ></div>
         </div>
         <div class="timeline-needle" ref="needle" :style="`left: ${needlePosition}px;`">
           <div class="timeline-needle-label">
@@ -39,24 +44,53 @@
 <script setup>
 import { computed, ref, onMounted } from 'vue'
 import { store, setNeedleSeconds } from '@/store'
-import { formatSeconds } from '@/utils'
+import {
+  formatSeconds,
+  transformSecondsToPosition,
+  transformPositionToSeconds,
+} from '@/utils'
 
 const needle = ref(null)
 const timeline = ref(null)
 const isDragging = ref(false)
 
 const file = computed(() => store.file)
-const timeRanges = computed(() => store.timeRanges)
+const duration = computed(() => store.videoData?.duration || 0)
+const currentTime = computed(() => store.videoData?.currentTime || 0)
+const formattedNeedleSeconds = computed(() => formatSeconds(store.needleSeconds))
+const needlePosition = computed(() => convertSecondsToPosition(store.needleSeconds))
 
-const formattedNeedleSeconds = computed(() =>
-  formatSeconds(store.needleSeconds)
+const timeRanges = computed(() =>
+  store.timeRanges.map(({ start, end }) => {
+    const left = convertSecondsToPosition(start)
+    const width = convertSecondsToPosition(end) - left
+    return { start, end, left, width }
+  })
 )
 
-const needlePosition = computed(() => {
-  if (!timeline.value || !store.videoData?.duration) return 0
-  const timelineRect = timeline.value.getBoundingClientRect()
-  return (store.needleSeconds * timelineRect.width / store.videoData.duration).toFixed(3)
+const canCrop = computed(() => {
+  if (currentTime.value === 0 || currentTime.value === duration.value) {
+    return false
+  }
+
+  return true
 })
+
+function convertSecondsToPosition(seconds) {
+  return transformSecondsToPosition(
+    seconds,
+    duration.value,
+    timeline.value,
+  )
+}
+
+function convertPositionToSeconds(position) {
+  return transformPositionToSeconds(
+    position,
+    duration.value,
+    timeline.value,
+  )
+}
 
 onMounted(() => {
   needle.value.addEventListener('mousedown', () => {
@@ -75,8 +109,7 @@ onMounted(() => {
     if (newLeft < 0) newLeft = 0
     if (newLeft > timelineRect.width) newLeft = timelineRect.width
 
-    const seconds = (newLeft * store.videoData.duration / timelineRect.width).toFixed(3)
-    setNeedleSeconds(seconds)
+    setNeedleSeconds(convertPositionToSeconds(newLeft))
   })
 })
 </script>
