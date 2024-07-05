@@ -1,11 +1,11 @@
 <template>
   <div class="timeline-container" :class="{ deactive: !file }">
     <div class="timeline-controls-container">
-      <button class="timeline-control timeline-undo" :disabled="true">
+      <button class="timeline-control timeline-undo" :disabled="!canUndo" @click="onUndoClick">
         <font-awesome-icon icon="fas fa-undo" />
       </button>
 
-      <button class="timeline-control timeline-redo" :disabled="true">
+      <button class="timeline-control timeline-redo" :disabled="!canRedo" @click="onRedoClick">
         <font-awesome-icon icon="fas fa-redo" />
       </button>
 
@@ -39,9 +39,14 @@
 <script setup>
 import { computed, onMounted, ref } from 'vue'
 import {
+  store,
+  canCrop,
+  canRedo,
+  canUndo,
+  undo,
+  redo,
   cropAtNeedle,
   setNeedleSeconds,
-  store,
   toggleDeleteAtNeedle,
 } from '@/store'
 import {
@@ -56,12 +61,9 @@ const isDragging = ref(false)
 
 const file = computed(() => store.file)
 const duration = computed(() => store.videoData?.duration || 0)
-const currentTime = computed(() => store.videoData?.currentTime || 0)
 const needleSeconds = computed(() => store.needleSeconds || 0)
 const formattedNeedleSeconds = computed(() => formatSeconds(needleSeconds.value))
 const needlePosition = computed(() => convertSecondsToPosition(needleSeconds.value))
-
-const canCrop = computed(() => currentTime.value > 0 && currentTime.value < duration.value)
 
 const positionatedTimeRanges = computed(() =>
   store.timeRanges.map(({ start, end, ...rest }) => {
@@ -70,6 +72,13 @@ const positionatedTimeRanges = computed(() =>
     return { ...rest, start, end, left, width }
   })
 )
+
+function onUndoClick() {
+  undo()
+}
+function onRedoClick() {
+  redo()
+}
 
 function onCropClick() {
   cropAtNeedle()

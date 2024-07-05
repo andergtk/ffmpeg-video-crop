@@ -4,9 +4,13 @@ export function createURLFromFile(file) {
 }
 
 export function formatSeconds(seconds) {
-  const value = seconds || 0
+  const value = normalizeSeconds(seconds || 0)
   const date = new Date(value * 1000)
   return date.toISOString().slice(14, 23) // HH:mm:ss.sss
+}
+
+export function normalizeSeconds(number) {
+  return Number(number.toFixed(3))
 }
 
 export function transformSecondsToPosition(seconds, duration, container) {
@@ -21,6 +25,6 @@ export function transformPositionToSeconds(position, duration, container) {
   return normalizeSeconds(position * duration / width)
 }
 
-export function normalizeSeconds(number) {
-  return Number(number.toFixed(3))
+export function clone(value) {
+  return JSON.parse(JSON.stringify(value))
 }
