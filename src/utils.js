@@ -13,16 +13,20 @@ export function normalizeSeconds(number) {
   return Number(number.toFixed(3))
 }
 
-export function transformSecondsToPosition(seconds, duration, container) {
-  if (!duration || !container) return 0
-  const { width } = container.getBoundingClientRect()
-  return normalizeSeconds(seconds * width / duration)
+export function convertSecondsToRatio(seconds, duration) {
+  if (duration) {
+    return seconds * 100 / duration
+  } else {
+    return 0
+  }
 }
 
-export function transformPositionToSeconds(position, duration, container) {
-  if (!duration || !container) return 0
-  const { width } = container.getBoundingClientRect()
-  return normalizeSeconds(position * duration / width)
+export function convertRatioToSeconds(ratio, duration) {
+  if (duration) {
+    return ratio * duration / 100
+  } else {
+    return 0
+  }
 }
 
 export function clone(value) {

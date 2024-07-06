@@ -24,9 +24,12 @@
     <div class="timeline-slices-container">
       <div class="timeline-inner" ref="timeline">
         <div class="timeline-slices">
-          <div class="timeline-slice" :class="{ deleted: timeRange.deleted }" v-for="timeRange in positionatedTimeRanges" :style="`left: ${timeRange.left}px; width: ${timeRange.width}px;`"></div>
+          <div class="timeline-slice"
+            v-for="timeRange in positionatedTimeRanges"
+            :class="{ deleted: timeRange.deleted }"
+            :style="`left: ${timeRange.left}%; width: ${timeRange.width}%;`"></div>
         </div>
-        <div class="timeline-needle" ref="needle" :style="`left: ${needlePosition}px;`">
+        <div class="timeline-needle" ref="needle" :style="`left: ${needlePosition}%;`">
           <div class="timeline-needle-label">
             {{ formattedNeedleSeconds }}
           </div>
@@ -51,8 +54,8 @@ import {
 } from '@/store'
 import {
   formatSeconds,
-  transformPositionToSeconds,
-  transformSecondsToPosition,
+  convertRatioToSeconds,
+  convertSecondsToRatio,
 } from '@/utils'
 
 const needle = ref(null)
@@ -63,12 +66,12 @@ const file = computed(() => store.file)
 const duration = computed(() => store.videoData?.duration || 0)
 const needleSeconds = computed(() => store.needleSeconds || 0)
 const formattedNeedleSeconds = computed(() => formatSeconds(needleSeconds.value))
-const needlePosition = computed(() => convertSecondsToPosition(needleSeconds.value))
+const needlePosition = computed(() => convertSecondsToRatio(needleSeconds.value, duration.value))
 
 const positionatedTimeRanges = computed(() =>
   store.timeRanges.map(({ start, end, ...rest }) => {
-    const left = convertSecondsToPosition(start)
-    const width = convertSecondsToPosition(end) - left
+    const left = convertSecondsToRatio(start, duration.value)
+    const width = convertSecondsToRatio(end, duration.value) - left
     return { ...rest, start, end, left, width }
   })
 )
@@ -88,15 +91,21 @@ function onToggleDeleteClick() {
   toggleDeleteAtNeedle()
 }
 
-function convertSecondsToPosition(seconds) {
-  return transformSecondsToPosition(seconds, duration.value, timeline.value)
-}
-
-function convertPositionToSeconds(position) {
-  return transformPositionToSeconds(position, duration.value, timeline.value)
+function handleTimelineMouseEvent(event) {
+  const rect = timeline.value.getBoundingClientRect()
+  let newLeft = event.clientX - rect.left
+  if (newLeft < 0) newLeft = 0
+  if (newLeft > rect.width) newLeft = rect.width
+  const ratio = newLeft * 100 / rect.width
+  const seconds = convertRatioToSeconds(ratio, duration.value)
+  setNeedleSeconds(seconds)
 }
 
 onMounted(() => {
+  timeline.value.addEventListener('click', event => {
+    handleTimelineMouseEvent(event)
+  })
+
   timeline.value.addEventListener('mousedown', () => {
     isDragging.value = true
   })
@@ -105,15 +114,10 @@ onMounted(() => {
     isDragging.value = false
   })
 
-  document.addEventListener('mousemove', (e) => {
-    if (!isDragging.value) return
-
-    const timelineRect = timeline.value.getBoundingClientRect()
-    let newLeft = e.clientX - timelineRect.left
-    if (newLeft < 0) newLeft = 0
-    if (newLeft > timelineRect.width) newLeft = timelineRect.width
-
-    setNeedleSeconds(convertPositionToSeconds(newLeft))
+  document.addEventListener('mousemove', event => {
+    if (isDragging.value) {
+      handleTimelineMouseEvent(event)
+    }
   })
 })
 </script>
