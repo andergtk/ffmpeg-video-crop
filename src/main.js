@@ -8,6 +8,7 @@ import {
   faUndo,
   faFilm,
   faCloudArrowUp,
+  faSave,
 } from '@fortawesome/free-solid-svg-icons'
 import { FontAwesomeIcon } from '@fortawesome/vue-fontawesome'
 import { createApp } from 'vue'
@@ -20,6 +21,7 @@ library.add(
   faUndo,
   faFilm,
   faCloudArrowUp,
+  faSave,
 )
 
 const app = createApp(App)

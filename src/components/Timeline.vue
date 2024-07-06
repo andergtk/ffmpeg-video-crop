@@ -1,24 +1,29 @@
 <template>
   <div class="timeline-container" :class="{ deactive: !file }">
     <div class="timeline-controls-container">
-      <button class="timeline-control timeline-undo" :disabled="!canUndo" @click="onUndoClick">
-        <font-awesome-icon icon="fas fa-undo" />
-      </button>
+      <div class="timeline-controls-left">
+        <button class="timeline-control timeline-undo" :disabled="!canUndo" @click="onUndoClick">
+          <font-awesome-icon icon="fas fa-undo" />
+        </button>
+        <button class="timeline-control timeline-redo" :disabled="!canRedo" @click="onRedoClick">
+          <font-awesome-icon icon="fas fa-redo" />
+        </button>
+        <button class="timeline-control timeline-crop" :disabled="!canCrop" @click="onCropClick">
+          <font-awesome-icon icon="fas fa-scissors" />
+          Crop
+        </button>
+        <div class="timeline-control-divider"></div>
+        <button class="timeline-control timeline-delete" @click="onToggleDeleteClick">
+          <font-awesome-icon icon="fas fa-trash" />
+        </button>
+      </div>
 
-      <button class="timeline-control timeline-redo" :disabled="!canRedo" @click="onRedoClick">
-        <font-awesome-icon icon="fas fa-redo" />
-      </button>
-
-      <button class="timeline-control timeline-crop" :disabled="!canCrop" @click="onCropClick">
-        <font-awesome-icon icon="fas fa-scissors" />
-        Crop
-      </button>
-
-      <div class="timeline-control-divider"></div>
-
-      <button class="timeline-control timeline-delete" @click="onToggleDeleteClick">
-        <font-awesome-icon icon="fas fa-trash" />
-      </button>
+      <div class="timeline-controls-right">
+        <button class="timeline-control timeline-save" :disabled="true">
+          <font-awesome-icon icon="fas fa-save" size="lg" />
+          Save
+        </button>
+      </div>
     </div>
 
     <div class="timeline-slices-container">
@@ -143,12 +148,22 @@ onMounted(() => {
 
 .timeline-controls-container {
   display: flex;
-  align-self: end;
+  justify-content: space-between;
+  gap: 8px;
+}
+
+.timeline-controls-left,
+.timeline-controls-right {
+  display: flex;
+  flex-wrap: wrap;
   gap: 8px;
 }
 
 .timeline-control {
   cursor: pointer;
+  display: flex;
+  align-items: center;
+  gap: 10px;
   padding: 0 16px;
   height: 48px;
   min-width: 48px;
@@ -164,6 +179,12 @@ onMounted(() => {
 .timeline-control[disabled] {
   cursor: not-allowed;
   opacity: 60%;
+}
+
+.timeline-save {
+  background-color: #2ecc71;
+  font-size: 18px;
+  font-weight: bold;
 }
 
 .timeline-delete {
@@ -184,7 +205,7 @@ onMounted(() => {
   padding: 24px;
   width: 100%;
   height: 128px;
-  border-radius: 8px;
+  border-radius: 24px;
   background-color: #34495e;
 }
 
