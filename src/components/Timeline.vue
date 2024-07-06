@@ -205,7 +205,7 @@ onMounted(() => {
   padding: 24px;
   width: 100%;
   height: 128px;
-  border-radius: 24px;
+  border-radius: 8px;
   background-color: #34495e;
 }
 
@@ -214,7 +214,7 @@ onMounted(() => {
   justify-content: space-between;
   width: 100%;
   height: 100%;
-  border-radius: 16px;
+  border-radius: 8px;
   background-color: #ffffff11;
 }
 
@@ -222,8 +222,26 @@ onMounted(() => {
   position: absolute;
   width: 100%;
   height: 100%;
-  border-radius: 16px;
   background-color: #ff000044;
+}
+
+.timeline-slice:first-child {
+  border-top-left-radius: 8px;
+  border-bottom-left-radius: 8px;
+}
+
+.timeline-slice:last-child {
+  border-top-right-radius: 8px;
+  border-bottom-right-radius: 8px;
+}
+
+.timeline-slice:not(:last-child)::after {
+  content: ' ';
+  position: absolute;
+  top: 0;
+  right: -2px;
+  height: 100%;
+  border-left: 4px dotted #ffffff55;
 }
 
 .timeline-slice.deleted {
@@ -235,10 +253,10 @@ onMounted(() => {
 .timeline-needle {
   cursor: pointer;
   position: absolute;
-  top: 0;
+  top: -2px;
   left: 0;
   transform: translateX(-2px);
-  height: 112px;
+  height: calc(100% + 2px + 24px);
   width: 4px;
   border-radius: 2px 2px 0 0;
   background-color: #fff;
