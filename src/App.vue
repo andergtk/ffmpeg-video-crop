@@ -1,10 +1,10 @@
 <template>
   <div class="page-container">
     <header class="page-header">
-      <a href="https://andersoncamargo.com.br/ffmpeg-video-crop/" title="FFmpeg Video Crop">
+      <a :href="homepage" title="FFmpeg Video Crop">
         <h1 class="page-title">FFmpeg Video Crop</h1>
       </a>
-      <a href="https://github.com/andergtk/ffmpeg-video-crop" title="GitHub Project Repository">
+      <a :href="repository.url" title="GitHub Project Repository">
         <font-awesome-icon icon="fab fa-github" size="2x" />
       </a>
     </header>
@@ -15,6 +15,7 @@
 </template>
 
 <script setup>
+import { homepage, repository } from '@/../package.json'
 import Player from '@/components/Player.vue'
 import Uploader from '@/components/Uploader.vue'
 import Timeline from '@/components/Timeline.vue'
