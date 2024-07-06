@@ -10,6 +10,7 @@ import {
   faCloudArrowUp,
   faSave,
 } from '@fortawesome/free-solid-svg-icons'
+import { faGithub } from '@fortawesome/free-brands-svg-icons'
 import { FontAwesomeIcon } from '@fortawesome/vue-fontawesome'
 import { createApp } from 'vue'
 import App from '@/App.vue'
@@ -22,6 +23,7 @@ library.add(
   faFilm,
   faCloudArrowUp,
   faSave,
+  faGithub,
 )
 
 const app = createApp(App)
