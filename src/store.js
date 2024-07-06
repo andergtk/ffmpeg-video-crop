@@ -19,7 +19,18 @@ export const canUndo = computed(() => store.undoStack.length > 0)
 export const canRedo = computed(() => store.redoStack.length > 0)
 export const canCrop = computed(() => {
   const { currentTime, duration } = store.videoData || {}
-  return currentTime > 0 && currentTime < duration
+
+  if (currentTime < 0 || currentTime > duration) {
+    return false
+  }
+
+  const timeRangeIndex = timeRangeIndexAtNeedle()
+
+  if (timeRangeIndex === -1) {
+    return false
+  }
+
+  return true
 })
 
 // File Input
@@ -73,9 +84,13 @@ export function normalizeTimeRange({ start, end, deleted }) {
   })
 }
 
+export function timeRangeIndexAtNeedle() {
+  return timeRangeIndexAtSecond(store.needleSeconds)
+}
+
 export function timeRangeIndexAtSecond(seconds) {
   return store.timeRanges.findIndex(({ start, end }) =>
-    start <= seconds && end > seconds
+    start < seconds && end > seconds
   )
 }
 
