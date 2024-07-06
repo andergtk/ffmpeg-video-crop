@@ -36,11 +36,11 @@ function onFileChange(event) {
   height: 72px;
   border-radius: 8px;
   border: 4px dashed #ffffff33;
-}
 
-.uploader-container.success {
-  border-color: transparent;
-  background-color: #2ecc71;
+  &.success {
+    border-color: transparent;
+    background-color: #2ecc71;
+  }
 }
 
 .uploader-label {
@@ -49,10 +49,10 @@ function onFileChange(event) {
   gap: 12px;
   color: #fff;
   font-weight: bold;
-}
 
-.uploader-label svg {
-  transform: translateY(-1px);
+  svg {
+    transform: translateY(-1px);
+  }
 }
 
 .uploader-input {

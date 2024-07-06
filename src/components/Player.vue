@@ -18,19 +18,19 @@ const video = ref(null)
 onMounted(() => registerVideoElement(video.value))
 </script>
 
-<style scoped>
+<style scoped lang="scss">
 .player-container {
   position: relative;
   width: 100%;
   padding-bottom: 50%;
   border-radius: 8px;
   background-color: #000;
-}
 
-.player-container video {
-  position: absolute;
-  width: 100%;
-  height: 100%;
-  border-radius: 8px;
+  video {
+    position: absolute;
+    width: 100%;
+    height: 100%;
+    border-radius: 8px;
+  }
 }
 </style>

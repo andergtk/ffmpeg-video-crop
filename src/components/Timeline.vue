@@ -2,24 +2,24 @@
   <div class="timeline-container" :class="{ deactive: !file }">
     <div class="timeline-controls-container">
       <div class="timeline-controls-left">
-        <button class="timeline-control timeline-undo" :disabled="!canUndo" @click="onUndoClick">
+        <button class="timeline-control undo" :disabled="!canUndo" @click="onUndoClick">
           <font-awesome-icon icon="fas fa-undo" />
         </button>
-        <button class="timeline-control timeline-redo" :disabled="!canRedo" @click="onRedoClick">
+        <button class="timeline-control redo" :disabled="!canRedo" @click="onRedoClick">
           <font-awesome-icon icon="fas fa-redo" />
         </button>
-        <button class="timeline-control timeline-crop" :disabled="!canCrop" @click="onCropClick">
+        <button class="timeline-control crop" :disabled="!canCrop" @click="onCropClick">
           <font-awesome-icon icon="fas fa-scissors" />
           Crop
         </button>
         <div class="timeline-control-divider"></div>
-        <button class="timeline-control timeline-delete" @click="onToggleDeleteClick">
+        <button class="timeline-control delete" @click="onToggleDeleteClick">
           <font-awesome-icon icon="fas fa-trash" />
         </button>
       </div>
 
       <div class="timeline-controls-right">
-        <button class="timeline-control timeline-save" :disabled="true">
+        <button class="timeline-control save" :disabled="true">
           <font-awesome-icon icon="fas fa-save" size="lg" />
           Save
         </button>
@@ -127,15 +127,15 @@ onMounted(() => {
 })
 </script>
 
-<style scoped>
+<style scoped lang="scss">
 .timeline-container {
   display: flex;
   flex-direction: column;
   gap: 16px;
-}
 
-.timeline-container.deactive {
-  pointer-events: none;
+  &.deactive {
+    pointer-events: none;
+  }
 }
 
 .timeline-inner {
@@ -170,25 +170,25 @@ onMounted(() => {
   border-radius: 8px;
   background-color: #34495e;
   color: #fff;
-}
 
-.timeline-control:hover:not([disabled]) {
-  opacity: 80%;
-}
+  &.delete {
+    color: #e74c3c;
+  }
 
-.timeline-control[disabled] {
-  cursor: not-allowed;
-  opacity: 60%;
-}
+  &.save {
+    background-color: #2ecc71;
+    font-size: 18px;
+    font-weight: bold;
+  }
 
-.timeline-save {
-  background-color: #2ecc71;
-  font-size: 18px;
-  font-weight: bold;
-}
+  &[disabled] {
+    cursor: not-allowed;
+    opacity: 50%;
+  }
 
-.timeline-delete {
-  color: #e74c3c;
+  &:hover:not([disabled]) {
+    opacity: 80%;
+  }
 }
 
 .timeline-control-divider {
@@ -223,29 +223,29 @@ onMounted(() => {
   width: 100%;
   height: 100%;
   background-color: #ff000044;
-}
 
-.timeline-slice:first-child {
-  border-top-left-radius: 8px;
-  border-bottom-left-radius: 8px;
-}
+  &:first-child {
+    border-top-left-radius: 8px;
+    border-bottom-left-radius: 8px;
+  }
 
-.timeline-slice:last-child {
-  border-top-right-radius: 8px;
-  border-bottom-right-radius: 8px;
-}
+  &:last-child {
+    border-top-right-radius: 8px;
+    border-bottom-right-radius: 8px;
+  }
 
-.timeline-slice:not(:last-child)::after {
-  content: ' ';
-  position: absolute;
-  top: 0;
-  right: -2px;
-  height: 100%;
-  border-left: 4px dotted #ffffff55;
-}
+  &:not(:last-child)::after {
+    content: ' ';
+    position: absolute;
+    top: 0;
+    right: -2px;
+    height: 100%;
+    border-left: 4px dotted #ffffff55;
+  }
 
-.timeline-slice.deleted {
-  opacity: 50%;
+  &.deleted {
+    opacity: 50%;
+  }
 }
 
 /* Needle */

@@ -20,7 +20,7 @@ import Uploader from '@/components/Uploader.vue'
 import Timeline from '@/components/Timeline.vue'
 </script>
 
-<style scoped>
+<style scoped lang="scss">
 .page-container {
   display: flex;
   flex-direction: column;
