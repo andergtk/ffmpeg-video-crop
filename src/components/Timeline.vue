@@ -1,14 +1,14 @@
 <template>
-  <div class="timeline-container" :class="{ deactive: !file }">
+  <div class="timeline-container" :class="{ deactive: !fileStore.hasFile }">
     <div class="timeline-controls-container">
       <div class="timeline-controls-left">
-        <button class="timeline-control undo" :disabled="!canUndo" @click="onUndoClick">
+        <button class="timeline-control undo" :disabled="!timelineStore.canUndo" @click="onUndoClick">
           <font-awesome-icon icon="fas fa-undo" />
         </button>
-        <button class="timeline-control redo" :disabled="!canRedo" @click="onRedoClick">
+        <button class="timeline-control redo" :disabled="!timelineStore.canRedo" @click="onRedoClick">
           <font-awesome-icon icon="fas fa-redo" />
         </button>
-        <button class="timeline-control crop" :disabled="!canCrop" @click="onCropClick">
+        <button class="timeline-control crop" :disabled="!timelineStore.canCrop" @click="onCropClick">
           <font-awesome-icon icon="fas fa-scissors" />
           Crop
         </button>
@@ -29,14 +29,13 @@
     <div class="timeline-slices-container">
       <div class="timeline-inner" ref="timeline">
         <div class="timeline-slices">
-          <div class="timeline-slice"
-            v-for="timeRange in positionatedTimeRanges"
-            :class="{ deleted: timeRange.deleted }"
-            :style="`left: ${timeRange.left}%; width: ${timeRange.width}%;`"></div>
+          <div class="timeline-slice" v-for="timeRange in positionatedTimeRanges"
+            :class="{ deleted: timeRange.deleted }" :style="`left: ${timeRange.left}%; width: ${timeRange.width}%;`">
+          </div>
         </div>
         <div class="timeline-needle" ref="needle" :style="`left: ${needlePosition}%;`">
           <div class="timeline-needle-label">
-            {{ formattedNeedleSeconds }}
+            {{ timelineStore.displayNeedleSeconds }}
           </div>
         </div>
       </div>
@@ -46,54 +45,40 @@
 
 <script setup>
 import { computed, onMounted, ref } from 'vue'
-import {
-  store,
-  canCrop,
-  canRedo,
-  canUndo,
-  undo,
-  redo,
-  cropAtNeedle,
-  setNeedleSeconds,
-  toggleDeleteAtNeedle,
-} from '@/store'
-import {
-  formatSeconds,
-  convertRatioToSeconds,
-  convertSecondsToRatio,
-} from '@/utils'
+import { useFileStore } from '@/stores/file'
+import { useTimelineStore } from '@/stores/timeline'
+import { convertRatioToSeconds, convertSecondsToRatio } from '@/utils'
 
 const needle = ref(null)
 const timeline = ref(null)
 const isDragging = ref(false)
 
-const file = computed(() => store.file)
-const duration = computed(() => store.videoData?.duration || 0)
-const needleSeconds = computed(() => store.needleSeconds || 0)
-const formattedNeedleSeconds = computed(() => formatSeconds(needleSeconds.value))
-const needlePosition = computed(() => convertSecondsToRatio(needleSeconds.value, duration.value))
+const fileStore = useFileStore()
+const timelineStore = useTimelineStore()
+
+const needlePosition = computed(() => convertSecondsToRatio(timelineStore.needleSeconds, timelineStore.duration))
 
 const positionatedTimeRanges = computed(() =>
-  store.timeRanges.map(({ start, end, ...rest }) => {
-    const left = convertSecondsToRatio(start, duration.value)
-    const width = convertSecondsToRatio(end, duration.value) - left
+  timelineStore.timeRanges.map(({ start, end, ...rest }) => {
+    const left = convertSecondsToRatio(start, timelineStore.duration)
+    const width = convertSecondsToRatio(end, timelineStore.duration) - left
     return { ...rest, start, end, left, width }
   })
 )
 
 function onUndoClick() {
-  undo()
+  timelineStore.undo()
 }
 function onRedoClick() {
-  redo()
+  timelineStore.redo()
 }
 
 function onCropClick() {
-  cropAtNeedle()
+  timelineStore.cropAtNeedle()
 }
 
 function onToggleDeleteClick() {
-  toggleDeleteAtNeedle()
+  timelineStore.toggleDeleteAtNeedle()
 }
 
 function handleTimelineMouseEvent(event) {
@@ -102,8 +87,8 @@ function handleTimelineMouseEvent(event) {
   if (newLeft < 0) newLeft = 0
   if (newLeft > rect.width) newLeft = rect.width
   const ratio = newLeft * 100 / rect.width
-  const seconds = convertRatioToSeconds(ratio, duration.value)
-  setNeedleSeconds(seconds)
+  const seconds = convertRatioToSeconds(ratio, timelineStore.duration)
+  timelineStore.syncNeedle(seconds)
 }
 
 onMounted(() => {

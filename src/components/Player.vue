@@ -1,21 +1,22 @@
 <template>
   <div class="player-container">
     <video ref="video" controls>
-      <source :src="fileUrl" v-if="fileUrl" />
+      <source :src="fileStore.virtualURL" v-if="fileStore.hasFile" />
     </video>
   </div>
 </template>
 
 <script setup>
-import { computed, ref, onMounted } from 'vue'
-import { store, registerVideoElement } from '@/store'
-import { createURLFromFile } from '@/utils'
+import { ref, onMounted } from 'vue'
+import { usePlayerStore } from '@/stores/player'
+import { useFileStore } from '@/stores/file'
 
-const fileUrl = computed(() => createURLFromFile(store.file))
+const playerStore = usePlayerStore()
+const fileStore = useFileStore()
 
 const video = ref(null)
 
-onMounted(() => registerVideoElement(video.value))
+onMounted(() => playerStore.registerElement(video.value))
 </script>
 
 <style scoped lang="scss">
