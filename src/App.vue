@@ -8,6 +8,7 @@
         <font-awesome-icon icon="fab fa-github" size="2x" />
       </a>
     </header>
+
     <uploader />
     <player />
     <timeline />
@@ -16,8 +17,8 @@
 
 <script setup>
 import { homepage, repository } from '@/../package.json'
-import Player from '@/components/Player.vue'
 import Uploader from '@/components/Uploader.vue'
+import Player from '@/components/Player.vue'
 import Timeline from '@/components/Timeline.vue'
 </script>
 

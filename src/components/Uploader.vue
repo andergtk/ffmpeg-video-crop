@@ -30,11 +30,10 @@ function onFileChange(event) {
   cursor: pointer;
   display: flex;
   align-items: center;
-  padding: 0 24px;
+  padding: 24px;
   width: 100%;
-  height: 72px;
   border-radius: 8px;
-  border: 4px dashed #ffffff33;
+  border: 4px dashed #7f8c8d;
 
   &.success {
     border-color: transparent;

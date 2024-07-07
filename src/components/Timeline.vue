@@ -13,7 +13,7 @@
           Crop
         </button>
         <div class="timeline-control-divider"></div>
-        <button class="timeline-control delete" @click="onToggleDeleteClick">
+        <button class="timeline-control delete" :disabled="!timelineStore.canToggleDelete" @click="onToggleDeleteClick">
           <font-awesome-icon icon="fas fa-trash" />
         </button>
       </div>
@@ -148,6 +148,7 @@ onMounted(() => {
   cursor: pointer;
   display: flex;
   align-items: center;
+  justify-content: center;
   gap: 10px;
   padding: 0 16px;
   height: 48px;
@@ -157,7 +158,7 @@ onMounted(() => {
   color: #fff;
 
   &.delete {
-    color: #e74c3c;
+    color: #e66767;
   }
 
   &.save {
@@ -172,7 +173,7 @@ onMounted(() => {
   }
 
   &:hover:not([disabled]) {
-    opacity: 80%;
+    background-color: #3c5267;
   }
 }
 
@@ -180,7 +181,7 @@ onMounted(() => {
   margin: 0 8px;
   height: 48x;
   width: 1px;
-  background-color: #ffffff11;
+  background-color: #34495e;
 }
 
 /* Slices  */
@@ -200,14 +201,14 @@ onMounted(() => {
   width: 100%;
   height: 100%;
   border-radius: 8px;
-  background-color: #ffffff11;
+  background-color: #3c5267;
 }
 
 .timeline-slice {
   position: absolute;
   width: 100%;
   height: 100%;
-  background-color: #ff000044;
+  background-color: #e66767;
 
   &:first-child {
     border-top-left-radius: 8px;
@@ -220,16 +221,17 @@ onMounted(() => {
   }
 
   &:not(:last-child)::after {
+    z-index: 1;
     content: ' ';
     position: absolute;
     top: 0;
-    right: -2px;
+    right: -1px;
     height: 100%;
-    border-left: 4px dotted #ffffff55;
+    border-left: 2px dotted #ffffff7F;
   }
 
   &.deleted {
-    opacity: 50%;
+    background-color: #e667677F;
   }
 }
 
@@ -254,8 +256,8 @@ onMounted(() => {
   transform: translateX(50%);
   padding: 4px 8px;
   border-radius: 16px;
-  background-color: #ffffff;
-  color: #000000aa;
+  background-color: #fff;
+  color: #2c3e50;
   font-size: 14px;
   font-weight: bold;
 }

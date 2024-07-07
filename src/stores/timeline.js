@@ -16,6 +16,7 @@ export const useTimelineStore = defineStore('timeline', {
     canUndo: (state) => state.undoStack.length > 0,
     canRedo: (state) => state.redoStack.length > 0,
     canCrop: (state) => state.timeRangeIndexAtSecond(state.needleSeconds) !== -1,
+    canToggleDelete: (state) => state.timeRangeIndexAtSecond(state.needleSeconds) !== -1,
 
     displayNeedleSeconds: (state) => formatSeconds(state.needleSeconds),
   },
