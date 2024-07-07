@@ -1,8 +1,6 @@
 <template>
   <div class="player-container">
-    <video ref="video" controls>
-      <source :src="fileStore.virtualURL" v-if="fileStore.hasFile" />
-    </video>
+    <video ref="video" controls :src="fileStore.virtualURL"></video>
   </div>
 </template>
 

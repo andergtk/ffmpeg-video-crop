@@ -22,11 +22,17 @@ export const useTimelineStore = defineStore('timeline', {
   },
 
   actions: {
-    init({ duration }) {
+    reset() {
+      this.init()
+    },
+
+    init({ duration = 0 } = {}) {
+      this.$reset()
       this.duration = normalizeSeconds(duration)
-      this.setTimeRanges([{ start: 0, end: this.duration }])
-      this.updateNeedle(0)
-      this.clearHistory()
+
+      if (this.duration > 0) {
+        this.setTimeRanges([{ start: 0, end: this.duration }])
+      }
     },
 
     updateNeedle(seconds) {
