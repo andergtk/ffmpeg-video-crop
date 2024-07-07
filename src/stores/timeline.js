@@ -81,7 +81,7 @@ export const useTimelineStore = defineStore('timeline', {
       const timeRangesClone = clone(this.timeRanges)
       const currentTimeRange = timeRangesClone[index]
       const { start, end, ...rest } = currentTimeRange
-      const leftTimeRange = { ...rest, start, end: seconds - 0.001 }
+      const leftTimeRange = { ...rest, start, end: seconds }
       const rightTimeRange = { ...rest, start: seconds, end }
       timeRangesClone.splice(index, 1, leftTimeRange, rightTimeRange)
 
