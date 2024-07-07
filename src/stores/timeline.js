@@ -18,6 +18,7 @@ export const useTimelineStore = defineStore('timeline', {
     canCrop: (state) => state.timeRangeIndexAtSecond(state.needleSeconds) !== -1,
     canToggleDelete: (state) => state.timeRangeIndexAtSecond(state.needleSeconds) !== -1,
 
+    displayDuration: (state) => formatSeconds(state.duration),
     displayNeedleSeconds: (state) => formatSeconds(state.needleSeconds),
   },
 

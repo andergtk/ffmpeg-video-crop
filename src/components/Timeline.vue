@@ -27,10 +27,14 @@
     </div>
 
     <div class="timeline-slices-container">
+      <div class="timeline-duration">{{ timelineStore.displayDuration }}</div>
       <div class="timeline-inner" ref="timeline">
         <div class="timeline-slices">
-          <div class="timeline-slice" v-for="timeRange in positionatedTimeRanges"
-            :class="{ deleted: timeRange.deleted }" :style="`left: ${timeRange.left}%; width: ${timeRange.width}%;`">
+          <div
+            v-for="timeRange in positionatedTimeRanges"
+            class="timeline-slice"
+            :class="{ deleted: timeRange.deleted }"
+            :style="`left: ${timeRange.left}%; width: ${timeRange.width}%;`">
           </div>
         </div>
         <div class="timeline-needle" ref="needle" :style="`left: ${needlePosition}%;`">
@@ -188,11 +192,19 @@ onMounted(() => {
 
 .timeline-slices-container {
   position: relative;
-  padding: 24px;
+  padding: 32px 24px 24px;
   width: 100%;
-  height: 128px;
+  height: 136px;
   border-radius: 8px;
   background-color: #34495e;
+}
+
+.timeline-duration {
+  position: absolute;
+  top: 12px;
+  right: 24px;
+  color: #fff;
+  font-size: 14px;
 }
 
 .timeline-slices {

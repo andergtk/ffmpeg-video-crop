@@ -1,5 +1,5 @@
 /**
- * Convert seconds to time format (HH:mm:ss.sss)
+ * Convert seconds to time format (HH:mm:ss.ss)
  *
  * @param {number} seconds
  * @returns {string}
@@ -7,7 +7,7 @@
 export function formatSeconds(seconds) {
   const value = normalizeSeconds(seconds || 0)
   const date = new Date(value * 1000)
-  return date.toISOString().slice(14, 23)
+  return date.toISOString().slice(11, 22)
 }
 
 /**
