@@ -1,6 +1,6 @@
 import { defineStore } from 'pinia'
 import { useTimelineStore } from '@/stores/timeline'
-import { normalizeSeconds } from '@/utils'
+import { isBetween, normalizeSeconds } from '@/utils'
 
 export const usePlayerStore = defineStore('player', {
   state: () => ({
@@ -26,10 +26,31 @@ export const usePlayerStore = defineStore('player', {
     },
 
     handleTimeUpdate() {
+      this.syncNeedle()
+      this.checkDeletedTimeRange()
+    },
+
+    syncNeedle() {
       const timelineStore = useTimelineStore()
 
-      if (this.videoElement.currentTime !== timelineStore.needleSeconds) {
+      if (timelineStore.needleSeconds !== this.videoElement.currentTime) {
         timelineStore.updateNeedle(this.videoElement.currentTime)
+      }
+    },
+
+    checkDeletedTimeRange() {
+      if (this.videoElement.paused) return
+
+      const timelineStore = useTimelineStore()
+      const { deletedTimeRanges } = timelineStore
+      const currentTime = this.videoElement.currentTime
+
+      const newCurrentTime = deletedTimeRanges.reduce((seconds, { start, end }) =>
+        isBetween(seconds, start, end) ? end : seconds
+      , currentTime)
+
+      if (currentTime !== newCurrentTime) {
+        this.videoElement.currentTime = newCurrentTime
       }
     },
 

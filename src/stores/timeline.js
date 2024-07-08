@@ -1,6 +1,6 @@
 import { defineStore } from 'pinia'
 import { usePlayerStore } from '@/stores/player'
-import { clone, formatSeconds, normalizeSeconds } from '@/utils'
+import { clone, formatSeconds, isBetween, normalizeSeconds } from '@/utils'
 
 export const useTimelineStore = defineStore('timeline', {
   state: () => ({
@@ -20,6 +20,8 @@ export const useTimelineStore = defineStore('timeline', {
 
     displayDuration: (state) => formatSeconds(state.duration),
     displayNeedleSeconds: (state) => formatSeconds(state.needleSeconds),
+
+    deletedTimeRanges: (state) => state.timeRanges.filter(({ deleted }) => deleted),
   },
 
   actions: {
@@ -44,7 +46,10 @@ export const useTimelineStore = defineStore('timeline', {
       this.updateNeedle(seconds)
 
       const playerStore = usePlayerStore()
-      playerStore.updateCurrentTime(this.needleSeconds)
+
+      if (playerStore.currentTime !== this.needleSeconds) {
+        playerStore.updateCurrentTime(this.needleSeconds)
+      }
     },
 
     // Time Ranges
@@ -64,7 +69,7 @@ export const useTimelineStore = defineStore('timeline', {
 
     timeRangeIndexAtSecond(seconds) {
       return this.timeRanges.findIndex(({ start, end }) =>
-        start < seconds && end > seconds
+        isBetween(seconds, start, end) && start !== seconds
       )
     },
 
@@ -100,7 +105,7 @@ export const useTimelineStore = defineStore('timeline', {
 
       if (index === -1) return
 
-      const timeRangesClone = this.timeRanges.slice()
+      const timeRangesClone = clone(this.timeRanges)
       const currentTimeRange = timeRangesClone[index]
       currentTimeRange.deleted = !currentTimeRange.deleted
 

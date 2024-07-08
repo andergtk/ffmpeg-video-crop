@@ -47,6 +47,18 @@ export function convertRatioToSeconds(ratio, duration) {
 }
 
 /**
+ * Check if a value is between a range
+ *
+ * @param {number} value
+ * @param {number} start
+ * @param {number} end
+ * @returns {boolean}
+ */
+export function isBetween(value, start, end) {
+  return start <= value && value < end
+}
+
+/**
  * Deep clone an object
  *
  * @param {T} value
